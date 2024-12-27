@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "177741500735",
+    "project_id": "projectmanagement-app-32e81",
+    "storage_bucket": "projectmanagement-app-32e81.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177741500735:android:57e40728593ab46671438a",
+        "android_client_info": {
+          "package_name": "ay.marhrani.gestionprojet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwmXgB4Z9qa6z4wpL7dPXfkMQFVd5RBN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

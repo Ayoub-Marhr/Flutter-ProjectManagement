@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gestionprojet/CreateProject/CreateProjectPage.dart';
 import 'package:gestionprojet/Schedule/Schedule.dart';
+import 'package:gestionprojet/auth/LoginPage.dart';
 import 'package:gestionprojet/profil/SettingsPage.dart';
 import 'Home/home_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,14 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BaseScreen(),
+      home: LoginPage(), // Set LoginPage as the first page
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF202932), // Updated background color
-        appBarTheme: AppBarTheme(
+        scaffoldBackgroundColor: const Color(0xFF202932), // Updated background color
+        appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF202932), // Updated AppBar background color
           foregroundColor: Colors.white,
         ),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),
           bodyMedium: TextStyle(color: Colors.white),
         ),
@@ -55,12 +57,12 @@ class _BaseScreenState extends State<BaseScreen> {
       body: _screens[_currentIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: Color(0xFF202932), // Set bottom nav background color
+          canvasColor: const Color(0xFF202932), // Set bottom nav background color
         ),
         child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // Added to ensure all items are visible
-          backgroundColor: Color(0xFF202932),
-          selectedItemColor: Color(0xFFFED36A),
+          type: BottomNavigationBarType.fixed, // Ensures all items are visible
+          backgroundColor: const Color(0xFF202932),
+          selectedItemColor: const Color(0xFFFED36A),
           unselectedItemColor: Colors.white54,
           currentIndex: _currentIndex,
           onTap: _onTabTapped,

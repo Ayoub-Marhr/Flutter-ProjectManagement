@@ -14,7 +14,7 @@ class OngoingProjectList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: projects.map((project) {
-        double progress = double.tryParse(project['progress'] ?? '0') ?? 0;
+        double progress = double.tryParse(project['progress']?.toString() ?? '0') ?? 0;
         List<String> members = List<String>.from(project['members'] ?? []);
 
         return InkWell(
@@ -29,7 +29,7 @@ class OngoingProjectList extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
             child: Card(
-              color: Color(0xFF445B64), // Applied the new color here
+              color: const Color(0xFF445B64),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -54,16 +54,18 @@ class OngoingProjectList extends StatelessWidget {
                           const SizedBox(height: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: members.take(2).map((member) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Text(
-                                member,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
+                            children: members.take(2).map((member) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Text(
+                                  member,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                            )).toList(),
+                              );
+                            }).toList(),
                           ),
                           const SizedBox(height: 10),
                           Text(

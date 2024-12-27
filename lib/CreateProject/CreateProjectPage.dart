@@ -9,7 +9,7 @@ class Task {
   bool isExpanded;
 
   Task({
-    required this.title, 
+    required this.title,
     this.description = '',
     this.assignedMembers = const [],
     this.isCompleted = false,
@@ -29,7 +29,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   final TextEditingController _taskDescriptionController = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime selectedDate = DateTime.now();
-  List<String> selectedMembers = ['MichaelK', 'LarryM'];
+  List<String> selectedMembers = [];
   List<Task> tasks = [];
 
   @override
@@ -81,7 +81,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
-                hintText: 'Hi-Fi Wireframe',
+                hintText: 'Enter project title',
                 hintStyle: TextStyle(color: Colors.white54),
               ),
             ),
@@ -107,7 +107,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
-                hintText: 'Lorem ipsum is simply dummy text of the printing and typesetting industry...',
+                hintText: 'Enter project details',
                 hintStyle: TextStyle(color: Colors.white54),
               ),
             ),
@@ -155,51 +155,48 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
               children: [
                 Expanded(
                   child: GestureDetector(
-          onTap: () async {
-            // Show the time picker
-            final TimeOfDay? time = await showTimePicker(
-              context: context,
-              initialTime: selectedTime,
-              builder: (BuildContext context, Widget? child) {
-                return Theme(
-                  data: ThemeData.dark().copyWith(
-                    colorScheme: ColorScheme.dark(
-                      primary: Color(0xFFFED36A),
-                      onPrimary: Colors.black,
-                      surface: Color(0xFF2F3B46),
-                      onSurface: Colors.white,
+                    onTap: () async {
+                      final TimeOfDay? time = await showTimePicker(
+                        context: context,
+                        initialTime: selectedTime,
+                        builder: (BuildContext context, Widget? child) {
+                          return Theme(
+                            data: ThemeData.dark().copyWith(
+                              colorScheme: ColorScheme.dark(
+                                primary: Color(0xFFFED36A),
+                                onPrimary: Colors.black,
+                                surface: Color(0xFF2F3B46),
+                                onSurface: Colors.white,
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (time != null) {
+                        setState(() {
+                          selectedTime = time;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF2F3B46),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${selectedTime.format(context)}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Icon(Icons.access_time, color: Color(0xFFFED36A)),
+                        ],
+                      ),
                     ),
                   ),
-                  child: child!,
-                );
-              },
-            );
-            if (time != null) {
-              setState(() {
-                selectedTime = time;  // Update selected time
-              });
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Color(0xFF2F3B46),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Display the selected time
-                Text(
-                  '${selectedTime.format(context)}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Icon(Icons.access_time, color: Color(0xFFFED36A)),
-              ],
-            ),
-          ),
-        ),
-      
                 ),
                 SizedBox(width: 16),
                 Expanded(
@@ -310,7 +307,6 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  // Create project functionality here
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
@@ -336,127 +332,126 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
     );
   }
 
-Widget _buildTaskList() {
-  return ListView.builder(
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(),
-    itemCount: tasks.length,
-    itemBuilder: (context, index) {
-      final task = tasks[index];
-      final descriptionController = TextEditingController(text: task.description);
-      
-      return Card(
-        color: Color(0xFF2F3B46),
-        margin: EdgeInsets.only(bottom: 8),
-        child: ExpansionTile(
-          leading: Checkbox(
-            value: task.isCompleted,
-            onChanged: (bool? value) {
-              setState(() {
-                task.isCompleted = value ?? false;
-              });
-            },
-            fillColor: MaterialStateProperty.resolveWith(
-              (states) => Color(0xFFFED36A),
+  Widget _buildTaskList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
+        final descriptionController = TextEditingController(text: task.description);
+
+        return Card(
+          color: Color(0xFF2F3B46),
+          margin: EdgeInsets.only(bottom: 8),
+          child: ExpansionTile(
+            leading: Checkbox(
+              value: task.isCompleted,
+              onChanged: (bool? value) {
+                setState(() {
+                  task.isCompleted = value ?? false;
+                });
+              },
+              fillColor: MaterialStateProperty.resolveWith(
+                (states) => Color(0xFFFED36A),
+              ),
             ),
-          ),
-          title: Text(
-            task.title,
-            style: TextStyle(
-              color: Colors.white,
-              decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+            title: Text(
+              task.title,
+              style: TextStyle(
+                color: Colors.white,
+                decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+              ),
             ),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.delete, color: Colors.white54),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  backgroundColor: Color(0xFF2F3B46),
-                  title: Text('Delete Task', style: TextStyle(color: Colors.white)),
-                  content: Text('Are you sure you want to delete this task?', 
-                    style: TextStyle(color: Colors.white)),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('Cancel', style: TextStyle(color: Colors.white54)),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          tasks.removeAt(index);
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text('Delete', style: TextStyle(color: Color(0xFFFED36A))),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: descriptionController,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Add description',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Color(0xFF202932),
-                    ),
-                    maxLines: 3,
-                    onChanged: (value) {
-                      setState(() {
-                        task.description = value;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Assigned Members',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      ...task.assignedMembers.map((member) => Chip(
-                        label: Text(member, style: TextStyle(color: Colors.white)),
-                        backgroundColor: Color(0xFF202932),
-                        deleteIcon: Icon(Icons.close, size: 18, color: Color(0xFFFED36A)),
-                        onDeleted: () {
+            trailing: IconButton(
+              icon: Icon(Icons.delete, color: Colors.white54),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Color(0xFF2F3B46),
+                    title: Text('Delete Task', style: TextStyle(color: Colors.white)),
+                    content: Text('Are you sure you want to delete this task?',
+                        style: TextStyle(color: Colors.white)),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel', style: TextStyle(color: Colors.white54)),
+                      ),
+                      TextButton(
+                        onPressed: () {
                           setState(() {
-                            task.assignedMembers.remove(member);
+                            tasks.removeAt(index);
                           });
+                          Navigator.pop(context);
                         },
-                      )),
-                      ActionChip(
-                        label: Icon(Icons.add, size: 20, color: Color(0xFFFED36A)),
-                        backgroundColor: Color(0xFF202932),
-                        onPressed: () => _showAssignMemberDialog(index),
+                        child: Text('Delete', style: TextStyle(color: Color(0xFFFED36A))),
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          ],
-        ),
-      );
-    },
-  );
-}
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: descriptionController,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Add description',
+                        hintStyle: TextStyle(color: Colors.white54),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Color(0xFF202932),
+                      ),
+                      maxLines: 3,
+                      onChanged: (value) {
+                        setState(() {
+                          task.description = value;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Assigned Members',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        ...task.assignedMembers.map((member) => Chip(
+                              label: Text(member, style: TextStyle(color: Colors.white)),
+                              backgroundColor: Color(0xFF202932),
+                              deleteIcon: Icon(Icons.close, size: 18, color: Color(0xFFFED36A)),
+                              onDeleted: () {
+                                setState(() {
+                                  task.assignedMembers.remove(member);
+                                });
+                              },
+                            )),
+                        ActionChip(
+                          label: Icon(Icons.add, size: 20, color: Color(0xFFFED36A)),
+                          backgroundColor: Color(0xFF202932),
+                          onPressed: () => _showAssignMemberDialog(index),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
-
-    Widget _buildMemberChip(String name) {
+  Widget _buildMemberChip(String name) {
     return Chip(
       label: Text(
         name,
@@ -466,70 +461,68 @@ Widget _buildTaskList() {
       deleteIcon: Icon(Icons.close, color: Color(0xFFFED36A)),
       onDeleted: () {
         setState(() {
-          selectedMembers.remove(name); // Remove member from the list
+          selectedMembers.remove(name);
         });
       },
     );
   }
 
+  void _showAddMemberDialog() {
+    final TextEditingController _memberController = TextEditingController();
 
-
- void _showAddMemberDialog() {
-  final TextEditingController _memberController = TextEditingController();
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        backgroundColor: const Color(0xFF2F3B46),
-        title: const Text(
-          'Add Team Member',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: TextField(
-          controller: _memberController,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFF2F3B46),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-            hintText: 'Enter member name',
-            hintStyle: const TextStyle(color: Colors.white54),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2F3B46),
+          title: const Text(
+            'Add Team Member',
+            style: TextStyle(color: Colors.white),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final memberName = _memberController.text.trim();
-              if (memberName.isNotEmpty) {
-                setState(() {
-                  selectedMembers.add(memberName);
-                });
-              }
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFED36A),
-            ),
-            child: const Text(
-              'Add',
-              style: TextStyle(color: Colors.black),
+          content: TextField(
+            controller: _memberController,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color(0xFF2F3B46),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              hintText: 'Enter member name',
+              hintStyle: const TextStyle(color: Colors.white54),
             ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final memberName = _memberController.text.trim();
+                if (memberName.isNotEmpty) {
+                  setState(() {
+                    selectedMembers.add(memberName);
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFED36A),
+              ),
+              child: const Text(
+                'Add',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   void _showAssignMemberDialog(int taskIndex) {

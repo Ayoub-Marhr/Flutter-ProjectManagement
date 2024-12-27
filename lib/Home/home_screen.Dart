@@ -8,31 +8,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Map<String, String>> completedProjects = [
-    {'title': 'Real Estate Website Design', 'date': '20 March'},
-    {'title': 'Finance Mobile App Design', 'date': '15 April'},
-  ];
+  final List<Map<String, String>> completedProjects = [];
 
-  final List<Map<String, dynamic>> ongoingProjects = [
-    {
-      'title': 'Mobile App Wireframe',
-      'date': '21 March',
-      'progress': '0.5',
-      'members': ['Alice', 'Bob']
-    },
-    {
-      'title': 'Real Estate App Design',
-      'date': '20 June',
-      'progress': '0.3',
-      'members': ['Charlie', 'David']
-    },
-    {
-      'title': 'Dashboard & App Design',
-      'date': '28 June',
-      'progress': '0.8',
-      'members': ['Eva', 'Frank']
-    },
-  ];
+  final List<Map<String, dynamic>> ongoingProjects = [];
 
   TextEditingController searchController = TextEditingController();
   List<Map<String, String>> filteredCompletedProjects = [];
@@ -71,10 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF242D35), // Secondary color
+      backgroundColor: Color(0xFF242D35),
       appBar: AppBar(
-        title: const Text("Home Screen",style: TextStyle(color: Colors.white),),
-        backgroundColor: Color(0xFF242D35), // Secondary color
+        title: const Text("Home Screen", style: TextStyle(color: Colors.white)),
+        backgroundColor: Color(0xFF242D35),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -82,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Section
             Text(
               "Mahrhani Ayoub",
               style: TextStyle(
@@ -107,26 +84,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Completed Projects Section
             _sectionHeader("Completed Projects", onTap: () {
               // Action for 'See all'
             }),
             const SizedBox(height: 10),
-            CompletedProjectList(projects: filteredCompletedProjects), // Display filtered list
-
+            CompletedProjectList(projects: filteredCompletedProjects),
             const SizedBox(height: 20),
-
-            // Ongoing Projects Section
             _sectionHeader("Ongoing Projects", onTap: () {
               // Action for 'See all'
             }),
             const SizedBox(height: 10),
-            OngoingProjectList(projects: filteredOngoingProjects), // Display filtered list
+            OngoingProjectList(projects: filteredOngoingProjects),
           ],
         ),
       ),
-      
     );
   }
 
@@ -147,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             "See all",
             style: TextStyle(
-              color: Color(0xFFE4C677), // Primary color
+              color: Color(0xFFE4C677),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

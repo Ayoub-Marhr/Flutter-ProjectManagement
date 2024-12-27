@@ -13,11 +13,11 @@ class ProjectCard extends StatelessWidget {
     required this.isOngoing,
   });
 
-  static Widget buildProjectList(List<Map<String, String>> projects, {required bool isOngoing}) {
+  static Widget buildProjectList(List<Map<String, dynamic>> projects, {required bool isOngoing}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: projects.map((project) {
-        double? progress = isOngoing ? double.parse(project['progress']!) : null;
+        double? progress = isOngoing ? double.tryParse(project['progress']?.toString() ?? '0') : null;
         return Container(
           margin: const EdgeInsets.only(right: 12),
           width: 180,
@@ -32,7 +32,7 @@ class ProjectCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    project['title']!,
+                    project['title'] ?? '',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -41,14 +41,14 @@ class ProjectCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    "Due on: ${project['date']}",
+                    "Due on: ${project['date'] ?? ''}",
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  isOngoing
+                  isOngoing && progress != null
                       ? CircularProgressIndicator(
                           value: progress,
                           backgroundColor: Colors.white30,
@@ -101,7 +101,7 @@ class ProjectCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              isOngoing
+              isOngoing && progress != null
                   ? CircularProgressIndicator(
                       value: progress,
                       backgroundColor: Colors.white30,

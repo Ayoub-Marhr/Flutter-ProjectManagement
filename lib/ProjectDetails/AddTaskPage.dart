@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddTaskPage extends StatefulWidget {
-  final String projectName; // Accept project name as a parameter
+  final String projectName;
 
   const AddTaskPage({Key? key, required this.projectName}) : super(key: key);
 
@@ -11,15 +11,12 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _priorityController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _dueDate;
   String _selectedStatus = 'Pending';
 
-  final List<String> members = ['John Doe', 'Jane Smith', 'Alex Johnson'];
   final List<String> taskStatuses = ['Pending', 'In Progress', 'Completed'];
-
   bool _isLoading = false;
 
   @override
@@ -51,7 +48,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _dueDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != _dueDate) {
@@ -73,10 +70,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          color: const Color(0xFFFED36A), // Color for the icon
+          color: const Color(0xFFFED36A),
         ),
       ),
-      backgroundColor: const Color(0xFF202932), // Updated background color
+      backgroundColor: const Color(0xFF202932),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -86,10 +83,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                _buildSectionHeader(Icons.group, 'Members'),
-                const SizedBox(height: 8),
-                _buildMembersList(),
-                const SizedBox(height: 24),
                 _buildDropdown('Task Status', taskStatuses, _selectedStatus, (value) {
                   setState(() {
                     _selectedStatus = value!;
@@ -111,52 +104,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // Section Header for 'Members' and others
-  Widget _buildSectionHeader(IconData icon, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Icon(
-          icon,
-          color: const Color(0xFFFED36A), // Color for the icon
-          size: 30,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Builds the members list
-  Widget _buildMembersList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: members.map((member) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  member,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  // Builds the dropdown for task status
   Widget _buildDropdown(String label, List<String> items, String value, ValueChanged<String?> onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +141,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // Builds a text field with label and validation
   Widget _buildTextField(TextEditingController controller, String label, String validationMessage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +176,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // Builds the due date field
   Widget _buildDueDateField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,35 +211,32 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // Builds the submit button with loading indicator
-Widget _buildSubmitButton() {
-  return Center(
-    child: SizedBox(
-      width: double.infinity, // Make the button take the full width
-      child: TextButton(
-        onPressed: _isLoading ? null : _submitForm,
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFFED36A), // Button background color
-          padding: const EdgeInsets.symmetric(vertical: 12.0), // Vertical padding
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildSubmitButton() {
+    return Center(
+      child: SizedBox(
+        width: double.infinity,
+        child: TextButton(
+          onPressed: _isLoading ? null : _submitForm,
+          style: TextButton.styleFrom(
+            backgroundColor: const Color(0xFFFED36A),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-        ),
-        child: _isLoading
-            ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              )
-            : const Text(
-                'Submit Task',
-                style: TextStyle(
-                  color: Colors.black, // Black text color
-                  fontSize: 16,
+          child: _isLoading
+              ? const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
+              : const Text(
+                  'Submit Task',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                 ),
-              ),
+        ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 }

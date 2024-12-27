@@ -8,13 +8,7 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  List<Map<String, String>> tasks = [
-    {'title': 'User Interviews', 'time': '09:00 - 10:30'},
-    {'title': 'Wireframe', 'time': '10:30 - 12:30'},
-    {'title': 'Icons', 'time': '14:00 - 15:00'},
-    {'title': 'Mockups', 'time': '15:00 - 16:30'},
-    {'title': 'Testing', 'time': '16:30 - 17:30'},
-  ];
+ 
 
   DateTime selectedDate = DateTime.now();
   late List<DateTime> allDaysInYear;
@@ -142,9 +136,7 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               const SizedBox(height: 16),
               Column(
-                children: tasks
-                    .map((task) => _buildTaskItem(task['title']!, task['time']!))
-                    .toList(),
+                
               ),
             ],
           ),
@@ -267,7 +259,7 @@ class _SchedulePageState extends State<SchedulePage> {
             ),
             TextButton(
               onPressed: () {
-                if (title.isNotEmpty && time.isNotEmpty) {
+                if (title.isNotEmpty && time.isNotEmpty) { 
                 }
                 Navigator.pop(context);
               },

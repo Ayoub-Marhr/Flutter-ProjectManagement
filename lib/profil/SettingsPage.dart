@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gestionprojet/main.dart';
 
-
-
 class ProfilePage extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController(text: 'FullName');
-  final TextEditingController emailController = TextEditingController(text: 'YourName@gmail.com');
-  final TextEditingController passwordController = TextEditingController(text: '********');
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +183,7 @@ class LogoutButton extends StatelessWidget {
 }
 
 class ProjectsPage extends StatelessWidget {
-  final List<Map<String, String>> projects = [
-    {'name': 'Project A', 'details': 'Details about Project A'},
-    {'name': 'Project B', 'details': 'Details about Project B'},
-    {'name': 'Project C', 'details': 'Details about Project C'},
-    {'name': 'Project D', 'details': 'Details about Project D'},
-  ];
+  final List<Map<String, String>> projects = [];
 
   @override
   Widget build(BuildContext context) {
@@ -202,26 +195,33 @@ class ProjectsPage extends StatelessWidget {
       body: Container(
         color: Color(0xFF202833),
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: projects.length,
-          itemBuilder: (context, index) {
-            return ProjectCard(
-              projectName: projects[index]['name']!,
-              projectDetails: projects[index]['details']!,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProjectDetailsPage(
-                      projectName: projects[index]['name']!,
-                      projectDetails: projects[index]['details']!,
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
+        child: projects.isNotEmpty
+            ? ListView.builder(
+                itemCount: projects.length,
+                itemBuilder: (context, index) {
+                  return ProjectCard(
+                    projectName: projects[index]['name']!,
+                    projectDetails: projects[index]['details']!,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProjectDetailsPage(
+                            projectName: projects[index]['name']!,
+                            projectDetails: projects[index]['details']!,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              )
+            : Center(
+                child: Text(
+                  "No Projects Available",
+                  style: TextStyle(color: Colors.white54, fontSize: 18),
+                ),
+              ),
       ),
     );
   }

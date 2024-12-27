@@ -32,7 +32,7 @@ class CompletedProjectList extends StatelessWidget {
                   );
                 },
                 child: Card(
-                  color: Color(0xFF445B64), // Applied the new color here
+                  color: Color(0xFF445B64),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
