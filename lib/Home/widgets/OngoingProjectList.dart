@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gestionprojet/ProjectDetails/ProjectDetailPage.dart';
+import 'package:gestionprojet/ProjectDetails/ProjectDetailPage.dart'; // Import the new page
 
 class OngoingProjectList extends StatelessWidget {
   final List<Map<String, dynamic>> projects;
+  final Map<String, String> userIdToFullName;
 
   const OngoingProjectList({
     Key? key,
     required this.projects,
+    required this.userIdToFullName,
   }) : super(key: key);
 
   @override
@@ -14,15 +16,23 @@ class OngoingProjectList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: projects.map((project) {
+        // Safely parse progress value or default to 0 if invalid
         double progress = double.tryParse(project['progress']?.toString() ?? '0') ?? 0;
-        List<String> members = List<String>.from(project['members'] ?? []);
+
+        // Convert members to full names
+        List<String> members = (project['members'] as List<dynamic>)
+            .map((id) => userIdToFullName[id] ?? "Unknown User")
+            .toList();
 
         return InkWell(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProjectDetailPage(project: project),
+                builder: (context) => ProjectDetailPage(
+                  project: project,
+                  userIdToFullName: userIdToFullName,
+                ),
               ),
             );
           },
@@ -44,7 +54,7 @@ class OngoingProjectList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            project['title'] ?? '',
+                            project['title'] ?? 'No title', 
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -52,6 +62,7 @@ class OngoingProjectList extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 10),
+                          // Display first two members by full names
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: members.take(2).map((member) {
@@ -67,6 +78,15 @@ class OngoingProjectList extends StatelessWidget {
                               );
                             }).toList(),
                           ),
+                          if (members.length > 2) ...[
+                            Text(
+                              'And ${members.length - 2} more...',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 10),
                           Text(
                             "Due on: ${project['date'] ?? ''}",
@@ -111,44 +131,4 @@ class OngoingProjectList extends StatelessWidget {
       }).toList(),
     );
   }
-}
-
-class ProgressCirclePainter extends CustomPainter {
-  final double progress;
-
-  const ProgressCirclePainter({required this.progress});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
-      ..color = Colors.grey;
-
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      size.width / 2,
-      paint,
-    );
-
-    paint
-      ..color = Colors.yellow
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 12;
-
-    final double angle = 2 * 3.14159265359 * progress;
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: Offset(size.width / 2, size.height / 2),
-        radius: size.width / 2,
-      ),
-      -3.14159265359 / 2,
-      angle,
-      false,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

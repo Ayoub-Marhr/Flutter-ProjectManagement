@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class AddTaskPage extends StatefulWidget {
   final String projectName;
+  final List<String> projectMembers; // List of user full names
+  final Function(Map<String, dynamic>) onTaskAdded;
 
-  const AddTaskPage({Key? key, required this.projectName}) : super(key: key);
+  const AddTaskPage({
+    Key? key,
+    required this.projectName,
+    required this.projectMembers,
+    required this.onTaskAdded,
+  }) : super(key: key);
 
   @override
   _AddTaskPageState createState() => _AddTaskPageState();
@@ -11,28 +18,47 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _priorityController = TextEditingController();
+  final TextEditingController _taskTitleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _dueDate;
   String _selectedStatus = 'Pending';
+  String? _assignedTo;  // Single selected user for the task
 
   final List<String> taskStatuses = ['Pending', 'In Progress', 'Completed'];
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _priorityController.dispose();
+    _taskTitleController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
+      if (_assignedTo == null) {
+        // If no user is assigned, show an error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please assign a task to a person')),
+        );
+        return;
+      }
+
       setState(() {
         _isLoading = true;
       });
 
-      await Future.delayed(const Duration(seconds: 2));
+      // Simulate adding the task
+      Map<String, dynamic> newTask = {
+        'title': _taskTitleController.text,
+        'description': _descriptionController.text,
+        'dueDate': _dueDate?.toLocal().toString() ?? 'No due date',
+        'status': _selectedStatus,
+        'assignedTo': [_assignedTo], // Single user in a list
+      };
+
+      // Call the callback function to notify the parent (ProjectDetailPage)
+      widget.onTaskAdded(newTask);
 
       setState(() {
         _isLoading = false;
@@ -41,6 +67,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Task Added Successfully')),
       );
+
+      // After task added, navigate back to the previous page
+      Navigator.pop(context);
     }
   }
 
@@ -89,11 +118,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   });
                 }),
                 const SizedBox(height: 24),
-                _buildTextField(_priorityController, 'Priority', 'Please enter priority'),
+                _buildTextField(_taskTitleController, 'Task Title', 'Please enter task title'),
                 const SizedBox(height: 24),
                 _buildTextField(_descriptionController, 'Description', 'Please enter description'),
                 const SizedBox(height: 24),
                 _buildDueDateField(),
+                const SizedBox(height: 24),
+                _buildUserAssignmentDropdown(),  // Dropdown for assigning user
                 const SizedBox(height: 24),
                 _buildSubmitButton(),
               ],
@@ -204,6 +235,47 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserAssignmentDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Assign to',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<String>(
+          value: _assignedTo,
+          items: widget.projectMembers
+              .map((member) => DropdownMenuItem<String>(
+                    value: member,
+                    child: Text(
+                      member,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ))
+              .toList(),
+          onChanged: (value) {
+            setState(() {
+              _assignedTo = value;
+            });
+          },
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[800],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
         ),

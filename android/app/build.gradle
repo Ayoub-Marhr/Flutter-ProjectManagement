@@ -2,7 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id "com.google.gms.google-services"  // Required for Firebase
+    id "com.google.gms.google-services"  // Add this for Firebase
 }
 
 android {
@@ -16,32 +16,27 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-    applicationId "ay.marhrani.gestionprojet"
-    minSdkVersion 23  // Updated from 21 to 23
-    targetSdkVersion flutter.targetSdkVersion
-    versionCode flutter.versionCode
-    versionName flutter.versionName
-    multiDexEnabled true  // Ensure multidex is enabled
-}
-
+        applicationId = "ay.marhrani.gestionprojet"
+        minSdk = 21  // Set minimum SDK to 21 for Firebase
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug  // Use proper signing for release builds in production
+            signingConfig = signingConfigs.debug
         }
     }
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:32.7.1')  // Firebase BOM
-    implementation 'com.google.firebase:firebase-auth'                // Firebase Auth
-    implementation 'com.google.firebase:firebase-firestore'           // Firebase Firestore
-    implementation 'com.google.firebase:firebase-storage'             // Firebase Storage
-    implementation 'com.android.support:multidex:1.0.3'               // Multidex
+    implementation platform('com.google.firebase:firebase-bom:32.7.1')
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 flutter {

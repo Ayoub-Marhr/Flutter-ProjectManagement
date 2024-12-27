@@ -1,0 +1,160 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "fullname": "Alice Johnson",
+      "email": "alice@example.com",
+      "password": "password123",
+      "created_at": "2023-12-01T10:00:00Z"
+    },
+    {
+      "id": "u2",
+      "fullname": "Bob Smith",
+      "email": "bob@example.com",
+      "password": "password456",
+      "created_at": "2023-12-02T14:30:00Z"
+    },
+    {
+      "id": "u3",
+      "fullname": "Charlie Davis",
+      "email": "charlie@example.com",
+      "password": "password789",
+      "created_at": "2023-12-03T08:15:00Z"
+    },
+    {
+      "id": "u4",
+      "fullname": "David Brown",
+      "email": "david@example.com",
+      "password": "password1011",
+      "created_at": "2023-12-04T12:45:00Z"
+    },
+    {
+      "id": "u5",
+      "fullname": "Eva White",
+      "email": "eva@example.com",
+      "password": "password1213",
+      "created_at": "2023-12-05T09:30:00Z"
+    },
+    {
+      "id": "u6",
+      "fullname": "Frank Miller",
+      "email": "frank@example.com",
+      "password": "password1415",
+      "created_at": "2023-12-06T11:00:00Z"
+    },
+    {
+      "id": "u7",
+      "fullname": "Grace Lee",
+      "email": "grace@example.com",
+      "password": "password1617",
+      "created_at": "2023-12-07T15:30:00Z"
+    },
+    {
+      "id": "u8",
+      "fullname": "Hannah Scott",
+      "email": "hannah@example.com",
+      "password": "password1819",
+      "created_at": "2023-12-08T10:30:00Z"
+    },
+    {
+      "id": "u9",
+      "fullname": "Isaac Turner",
+      "email": "isaac@example.com",
+      "password": "password2021",
+      "created_at": "2023-12-09T14:00:00Z"
+    },
+    {
+      "id": "u10",
+      "fullname": "Jack Wilson",
+      "email": "jack@example.com",
+      "password": "password2223",
+      "created_at": "2023-12-10T13:15:00Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "title": "Project Management System",
+      "description": "A system to manage projects effectively.",
+      "members": ["u1", "u2"],
+      "dueDate": "2024-01-15",
+      "progress": 0.7,
+      "status": "Ongoing",
+      "tasks": [
+        {"id": "t1", "title": "Design Mockups", "description": "Create UI/UX designs for the homepage.", "assignedTo": ["u1"], "dueDate": "2024-01-05", "status": "In Progress"},
+        {"id": "t2", "title": "Database Setup", "description": "Set up the database schema for the project.", "assignedTo": ["u2"], "dueDate": "2024-01-10", "status": "Pending"},
+        {"id": "t3", "title": "API Development", "description": "Develop the backend API for the system.", "assignedTo": ["u3"], "dueDate": "2024-01-12", "status": "In Progress"},
+        {"id": "t4", "title": "Design Backend", "description": "Design the backend architecture for the system.", "assignedTo": ["u4"], "dueDate": "2024-01-14", "status": "Pending"},
+        {"id": "t5", "title": "Testing", "description": "Perform unit and integration tests.", "assignedTo": ["u5"], "dueDate": "2024-01-18", "status": "Pending"},
+        {"id": "t6", "title": "User Stories", "description": "Write user stories for the project.", "assignedTo": ["u6"], "dueDate": "2024-01-06", "status": "Completed"},
+        {"id": "t7", "title": "Research", "description": "Conduct research for the project.", "assignedTo": ["u7"], "dueDate": "2024-01-08", "status": "Completed"},
+        {"id": "t8", "title": "Database Schema", "description": "Create the database schema for the project.", "assignedTo": ["u8"], "dueDate": "2024-01-11", "status": "In Progress"},
+        {"id": "t9", "title": "Deployment", "description": "Deploy the system to production.", "assignedTo": ["u9"], "dueDate": "2024-01-20", "status": "Pending"},
+        {"id": "t10", "title": "Documentation", "description": "Write the project documentation.", "assignedTo": ["u10"], "dueDate": "2024-01-22", "status": "Pending"}
+      ]
+    },
+    {
+      "id": "2",
+      "title": "E-Commerce Website",
+      "description": "Building an e-commerce platform.",
+      "members": ["u1", "u2"],
+      "dueDate": "2023-12-20",
+      "progress": 1.0,
+      "status": "Completed",
+      "tasks": [
+        {"id": "t1", "title": "Product Catalog", "description": "Build the product catalog page.", "assignedTo": ["u1"], "dueDate": "2023-12-10", "status": "Completed"},
+        {"id": "t2", "title": "Payment Integration", "description": "Integrate the payment gateway.", "assignedTo": ["u2"], "dueDate": "2023-12-15", "status": "Completed"},
+        {"id": "t3", "title": "User Registration", "description": "Create the user registration page.", "assignedTo": ["u3"], "dueDate": "2023-12-12", "status": "Completed"},
+        {"id": "t4", "title": "Cart System", "description": "Create the shopping cart system.", "assignedTo": ["u4"], "dueDate": "2023-12-18", "status": "Completed"},
+        {"id": "t5", "title": "Product Search", "description": "Develop the product search functionality.", "assignedTo": ["u5"], "dueDate": "2023-12-17", "status": "Completed"},
+        {"id": "t6", "title": "Order Management", "description": "Implement order management functionality.", "assignedTo": ["u6"], "dueDate": "2023-12-19", "status": "Completed"},
+        {"id": "t7", "title": "Payment Confirmation", "description": "Confirm payment and process orders.", "assignedTo": ["u7"], "dueDate": "2023-12-16", "status": "Completed"},
+        {"id": "t8", "title": "Shipping Integration", "description": "Integrate shipping options.", "assignedTo": ["u8"], "dueDate": "2023-12-14", "status": "Completed"},
+        {"id": "t9", "title": "Admin Panel", "description": "Create the admin panel for managing orders.", "assignedTo": ["u9"], "dueDate": "2023-12-13", "status": "Completed"},
+        {"id": "t10", "title": "Mobile App", "description": "Develop the mobile app for e-commerce.", "assignedTo": ["u10"], "dueDate": "2023-12-11", "status": "Completed"}
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Social Media Platform",
+      "description": "A platform for social networking and interaction.",
+      "members": ["u3", "u4"],
+      "dueDate": "2024-02-10",
+      "progress": 0.8,
+      "status": "Ongoing",
+      "tasks": [
+        {"id": "t1", "title": "UI Design", "description": "Design the user interface for the platform.", "assignedTo": ["u3"], "dueDate": "2024-01-15", "status": "In Progress"},
+        {"id": "t2", "title": "Backend Setup", "description": "Set up the server and APIs for the platform.", "assignedTo": ["u4"], "dueDate": "2024-01-17", "status": "Pending"},
+        {"id": "t3", "title": "User Authentication", "description": "Create user authentication system.", "assignedTo": ["u5"], "dueDate": "2024-01-20", "status": "Pending"},
+        {"id": "t4", "title": "Profile Management", "description": "Implement user profile features.", "assignedTo": ["u6"], "dueDate": "2024-01-22", "status": "In Progress"},
+        {"id": "t5", "title": "Social Feeds", "description": "Create the social media feed functionality.", "assignedTo": ["u7"], "dueDate": "2024-01-25", "status": "In Progress"},
+        {"id": "t6", "title": "Messaging System", "description": "Develop the messaging system.", "assignedTo": ["u8"], "dueDate": "2024-01-28", "status": "Pending"},
+        {"id": "t7", "title": "Search Functionality", "description": "Implement search functionality.", "assignedTo": ["u9"], "dueDate": "2024-02-01", "status": "Pending"},
+        {"id": "t8", "title": "Notifications", "description": "Set up user notifications.", "assignedTo": ["u10"], "dueDate": "2024-02-05", "status": "Pending"},
+        {"id": "t9", "title": "Admin Dashboard", "description": "Develop the admin dashboard.", "assignedTo": ["u1"], "dueDate": "2024-02-08", "status": "Pending"},
+        {"id": "t10", "title": "Testing", "description": "Test the social media platform.", "assignedTo": ["u2"], "dueDate": "2024-02-10", "status": "Pending"}
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Blogging Platform",
+      "description": "A platform to create and manage blogs.",
+      "members": ["u2", "u5"],
+      "dueDate": "2024-03-01",
+      "progress": 0.6,
+      "status": "Ongoing",
+      "tasks": [
+        {"id": "t1", "title": "Design Landing Page", "description": "Create the landing page for the blog.", "assignedTo": ["u1"], "dueDate": "2024-01-30", "status": "In Progress"},
+        {"id": "t2", "title": "Database Schema", "description": "Create the schema for storing blog data.", "assignedTo": ["u3"], "dueDate": "2024-02-01", "status": "Pending"},
+        {"id": "t3", "title": "Blog Post Creation", "description": "Allow users to create blog posts.", "assignedTo": ["u4"], "dueDate": "2024-02-05", "status": "In Progress"},
+        {"id": "t4", "title": "Comment System", "description": "Implement the comment system.", "assignedTo": ["u5"], "dueDate": "2024-02-10", "status": "Pending"},
+        {"id": "t5", "title": "User Management", "description": "Set up the user management system.", "assignedTo": ["u6"], "dueDate": "2024-02-15", "status": "Pending"},
+        {"id": "t6", "title": "SEO Optimization", "description": "Optimize the site for search engines.", "assignedTo": ["u7"], "dueDate": "2024-02-20", "status": "Pending"},
+        {"id": "t7", "title": "Deployment", "description": "Deploy the platform to production.", "assignedTo": ["u8"], "dueDate": "2024-02-25", "status": "Pending"},
+        {"id": "t8", "title": "Admin Panel", "description": "Create an admin panel for managing users.", "assignedTo": ["u9"], "dueDate": "2024-03-01", "status": "Pending"},
+        {"id": "t9", "title": "Testing", "description": "Test the blogging platform.", "assignedTo": ["u10"], "dueDate": "2024-03-02", "status": "Pending"},
+        {"id": "t10", "title": "Content Moderation", "description": "Moderate the content on the platform.", "assignedTo": ["u1"], "dueDate": "2024-03-05", "status": "Pending"}
+      ]
+    }
+  ]
+}

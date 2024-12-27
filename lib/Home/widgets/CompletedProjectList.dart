@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gestionprojet/ProjectDetails/ProjectDetailPage.dart';
+import 'package:gestionprojet/ProjectDetails/ProjectDetailPage.dart'; // Import the new page
 
 class CompletedProjectList extends StatelessWidget {
   final List<Map<String, dynamic>> projects;
+  final Map<String, String> userIdToFullName;  // Add this parameter
 
   const CompletedProjectList({
     Key? key,
     required this.projects,
+    required this.userIdToFullName, // Add this parameter
   }) : super(key: key);
 
   @override
@@ -18,6 +20,12 @@ class CompletedProjectList extends StatelessWidget {
         itemCount: projects.length,
         itemBuilder: (context, index) {
           final project = projects[index];
+
+          // Convert members to full names
+          List<String> members = (project['members'] as List<dynamic>)
+              .map((id) => userIdToFullName[id] ?? "Unknown User")
+              .toList();
+
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: SizedBox(
@@ -27,7 +35,10 @@ class CompletedProjectList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProjectDetailPage(project: project),
+                      builder: (context) => ProjectDetailPage(
+                        project: project,
+                        userIdToFullName: userIdToFullName,
+                      ),
                     ),
                   );
                 },
@@ -50,6 +61,15 @@ class CompletedProjectList extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5),
+                        // Display members first
+                        Text(
+                          "Members: ${members.join(', ')}", // Join names for display
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 10), // Space between members and due date
                         const Spacer(),
                         Text(
                           "Due on: ${project['date'] ?? ''}",

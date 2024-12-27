@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gestionprojet/ProjectDetails/ProjectDetailPage.dart';
+import 'package:gestionprojet/auth/UserService.dart';
 import 'widgets/CompletedProjectList.dart';
 import 'widgets/OngoingProjectList.dart';
 
@@ -8,21 +10,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Map<String, String>> completedProjects = [];
-
-  final List<Map<String, dynamic>> ongoingProjects = [];
-
-  TextEditingController searchController = TextEditingController();
-  List<Map<String, String>> filteredCompletedProjects = [];
+  List<Map<String, dynamic>> completedProjects = [];
+  List<Map<String, dynamic>> ongoingProjects = [];
+  List<Map<String, dynamic>> filteredCompletedProjects = [];
   List<Map<String, dynamic>> filteredOngoingProjects = [];
+
+  Map<String, String> userIdToFullName = {}; // This will store the mapping of user IDs to full names
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    filteredCompletedProjects = completedProjects;
-    filteredOngoingProjects = ongoingProjects;
-
-    // Listen for changes in the search input and filter the lists
+    _loadData();
     searchController.addListener(_filterProjects);
   }
 
@@ -32,26 +31,65 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  // Function to load the data
+  void _loadData() async {
+    try {
+      final users = await UserService.loadUsers();
+      final projects = await UserService.loadProjects();
+
+      // Create a map to map user IDs to full names
+      userIdToFullName = {
+        for (var user in users) user['id']: user['fullname'],
+      };
+
+      setState(() {
+        completedProjects = projects
+            .where((project) => project['status'] == 'Completed')
+            .toList();
+
+        ongoingProjects = projects
+            .where((project) => project['status'] == 'Ongoing')
+            .toList();
+
+        filteredCompletedProjects = completedProjects;
+        filteredOngoingProjects = ongoingProjects;
+      });
+    } catch (e) {
+      print("Error loading data: $e");
+    }
+  }
+
+  // Function to filter the projects
   void _filterProjects() {
     String query = searchController.text.toLowerCase();
 
     setState(() {
       filteredCompletedProjects = completedProjects
-          .where((project) => project['title']!.toLowerCase().contains(query))
+          .where((project) =>
+              project['title']!.toLowerCase().contains(query))
           .toList();
 
       filteredOngoingProjects = ongoingProjects
-          .where((project) => project['title']!.toLowerCase().contains(query))
+          .where((project) =>
+              project['title']!.toLowerCase().contains(query))
           .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Accessing the first user in the userIdToFullName map for greeting
+    String firstUserFullName = userIdToFullName.values.isNotEmpty
+        ? userIdToFullName.values.first
+        : "User";
+
     return Scaffold(
       backgroundColor: Color(0xFF242D35),
       appBar: AppBar(
-        title: const Text("Home Screen", style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Home Screen",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color(0xFF242D35),
         elevation: 0,
       ),
@@ -60,8 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header Section with the first user's full name
             Text(
-              "Mahrhani Ayoub",
+              'Welcome $firstUserFullName', 
               style: TextStyle(
                 color: Color(0xFFE4C677),
                 fontSize: 24,
@@ -84,17 +123,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            _sectionHeader("Completed Projects", onTap: () {
-              // Action for 'See all'
-            }),
+
+            // Completed Projects Section
+            _sectionHeader("Completed Projects", onTap: () {}),
             const SizedBox(height: 10),
-            CompletedProjectList(projects: filteredCompletedProjects),
+            // Pass userIdToFullName map to CompletedProjectList
+            CompletedProjectList(
+              projects: filteredCompletedProjects,
+              userIdToFullName: userIdToFullName, // Pass the map here
+            ),
+
             const SizedBox(height: 20),
-            _sectionHeader("Ongoing Projects", onTap: () {
-              // Action for 'See all'
-            }),
+
+            // Ongoing Projects Section
+            _sectionHeader("Ongoing Projects", onTap: () {}),
             const SizedBox(height: 10),
-            OngoingProjectList(projects: filteredOngoingProjects),
+            // Pass userIdToFullName map to OngoingProjectList
+            OngoingProjectList(
+              projects: filteredOngoingProjects,
+              userIdToFullName: userIdToFullName, // Pass the map here
+            ),
           ],
         ),
       ),
