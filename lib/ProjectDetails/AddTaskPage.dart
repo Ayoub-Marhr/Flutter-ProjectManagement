@@ -22,7 +22,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _dueDate;
   String _selectedStatus = 'Pending';
-  String? _assignedTo;  // Single selected user for the task
+  String? _assignedTo;
 
   final List<String> taskStatuses = ['Pending', 'In Progress', 'Completed'];
   bool _isLoading = false;
@@ -37,9 +37,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (_assignedTo == null) {
-        // If no user is assigned, show an error
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please assign a task to a person')),
+          const SnackBar(content: Text('Please assign the task to a member')),
         );
         return;
       }
@@ -48,16 +47,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
         _isLoading = true;
       });
 
-      // Simulate adding the task
+      // Create the new task
       Map<String, dynamic> newTask = {
         'title': _taskTitleController.text,
         'description': _descriptionController.text,
-        'dueDate': _dueDate?.toLocal().toString() ?? 'No due date',
+        'dueDate': _dueDate?.toLocal().toString().split(' ')[0] ?? 'No due date',
         'status': _selectedStatus,
-        'assignedTo': [_assignedTo], // Single user in a list
+        'assignedTo': _assignedTo, // Assign to the selected member
       };
 
-      // Call the callback function to notify the parent (ProjectDetailPage)
       widget.onTaskAdded(newTask);
 
       setState(() {
@@ -65,10 +63,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task Added Successfully')),
+        const SnackBar(content: Text('Task added successfully')),
       );
 
-      // After task added, navigate back to the previous page
       Navigator.pop(context);
     }
   }
@@ -91,16 +88,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Task'),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          color: const Color(0xFFFED36A),
+        title: const Text(
+          'Add Task',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: const Color(0xFF202932),
+        centerTitle: true,
       ),
       backgroundColor: const Color(0xFF202932),
       body: Padding(
@@ -112,19 +105,28 @@ class _AddTaskPageState extends State<AddTaskPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                _buildDropdown('Task Status', taskStatuses, _selectedStatus, (value) {
-                  setState(() {
-                    _selectedStatus = value!;
-                  });
-                }),
+                _buildDropdown(
+                  'Task Status',
+                  taskStatuses,
+                  _selectedStatus,
+                  (value) {
+                    setState(() {
+                      _selectedStatus = value!;
+                    });
+                  },
+                ),
                 const SizedBox(height: 24),
-                _buildTextField(_taskTitleController, 'Task Title', 'Please enter task title'),
+                _buildTextField(_taskTitleController, 'Task Title', 'Please enter a task title'),
                 const SizedBox(height: 24),
-                _buildTextField(_descriptionController, 'Description', 'Please enter description'),
+                _buildTextField(
+                  _descriptionController,
+                  'Description',
+                  'Please enter a description',
+                ),
                 const SizedBox(height: 24),
                 _buildDueDateField(),
                 const SizedBox(height: 24),
-                _buildUserAssignmentDropdown(),  // Dropdown for assigning user
+                _buildUserAssignmentDropdown(),
                 const SizedBox(height: 24),
                 _buildSubmitButton(),
               ],
@@ -135,28 +137,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String value, ValueChanged<String?> onChanged) {
+  Widget _buildDropdown(
+    String label,
+    List<String> items,
+    String value,
+    ValueChanged<String?> onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(label, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: value,
           items: items
               .map((status) => DropdownMenuItem<String>(
                     value: status,
-                    child: Text(
-                      status,
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                    child: Text(status, style: const TextStyle(color: Colors.white)),
                   ))
               .toList(),
           onChanged: onChanged,
@@ -176,14 +173,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(label, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
@@ -192,9 +182,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
             labelStyle: const TextStyle(color: Colors.white),
             filled: true,
             fillColor: Colors.grey[800],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -211,14 +199,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Due Date',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Due Date', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: () => _selectDueDate(context),
@@ -227,13 +208,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
               decoration: InputDecoration(
                 labelText: _dueDate == null
                     ? 'Select Due Date'
-                    : _dueDate!.toLocal().toString(),
+                    : _dueDate!.toLocal().toString().split(' ')[0],
                 labelStyle: const TextStyle(color: Colors.white),
                 filled: true,
                 fillColor: Colors.grey[800],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),
@@ -246,24 +225,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Assign to',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Assign to', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: _assignedTo,
           items: widget.projectMembers
-              .map((member) => DropdownMenuItem<String>(
-                    value: member,
-                    child: Text(
-                      member,
-                      style: const TextStyle(color: Colors.white),
-                    ),
+              .map((fullName) => DropdownMenuItem<String>(
+                    value: fullName,
+                    child: Text(fullName, style: const TextStyle(color: Colors.white)),
                   ))
               .toList(),
           onChanged: (value) {
@@ -274,9 +243,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey[800],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
         ),
       ],
@@ -292,20 +259,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
           style: TextButton.styleFrom(
             backgroundColor: const Color(0xFFFED36A),
             padding: const EdgeInsets.symmetric(vertical: 12.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: _isLoading
-              ? const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
+              ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
               : const Text(
                   'Submit Task',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
         ),
       ),

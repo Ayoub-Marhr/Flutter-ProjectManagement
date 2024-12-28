@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-      //home: HomeScreen(), // Set LoginPage as the first page
+      //home: LoginPage(),
+      home: HomeScreen(), // Set LoginPage as the first page
  // Set LoginPage as the first page
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFF202932), // Updated background color

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ProjectMembersPage extends StatelessWidget {
+class ProjectMembersPage extends StatefulWidget {
   final List<String> members;
   final String projectTitle;
 
@@ -11,88 +11,169 @@ class ProjectMembersPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ProjectMembersPageState createState() => _ProjectMembersPageState();
+}
+
+class _ProjectMembersPageState extends State<ProjectMembersPage> {
+  TextEditingController searchController = TextEditingController();
+  List<String> filteredMembers = [];
+  bool isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredMembers = widget.members; // Initially, show all members
+    searchController.addListener(_filterMembers);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterMembers() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredMembers = widget.members
+          .where((member) => member.toLowerCase().contains(query))
+          .toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Project Members'),
-        centerTitle: true,
-        backgroundColor: Colors.white12,
+        title: isSearching
+            ? TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search members...',
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(color: Colors.white),
+                autofocus: true,
+              )
+            : const Text(
+                'Project Members',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+        backgroundColor: const Color(0xFF202932),
         elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(isSearching ? Icons.close : Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            if (isSearching) {
+              setState(() {
+                isSearching = false;
+                searchController.clear();
+              });
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
+        actions: [
+          if (!isSearching)
+            IconButton(
+              icon: const Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                setState(() {
+                  isSearching = true;
+                });
+              },
+            ),
+        ],
       ),
       backgroundColor: const Color(0xFF202932),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title and Project Icon Section
-              Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFfed36a),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Icon(
-                              Icons.people,
-                              color: Colors.black,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 10), // Space between icon and text
-                          GestureDetector(
-                            onTap: () {
-                              // Navigate to ProjectMembersPage when tapped
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProjectMembersPage(members: members, projectTitle: '',),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Project Members',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-              const SizedBox(height: 20),
-
-              // Members List Section
-              const Text(
-                "Members",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Section with Icon and Project Title
+            Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFfed36a),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Icon(
+                    Icons.person_outline,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: members.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      members[index],
-                      style: const TextStyle(color: Colors.white),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.projectTitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Members List Section
+            Expanded(
+              child: filteredMembers.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: filteredMembers.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                filteredMembers[index],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              trailing: index == 0 &&
+                                      filteredMembers[index] == widget.members[0]
+                                  ? const Text(
+                                      'ADMIN',
+                                      style: TextStyle(
+                                        color: Color(0xFFfed36a),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            const Divider(
+                              color: Colors.white24,
+                              thickness: 0.5,
+                              height: 1,
+                            ),
+                          ],
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                        'No members found',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+            ),
+          ],
         ),
       ),
     );

@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Header Section with the first user's full name
             Text(
-              'Welcome $firstUserFullName', 
+              ' $firstUserFullName', 
               style: TextStyle(
                 color: Color(0xFFE4C677),
                 fontSize: 24,

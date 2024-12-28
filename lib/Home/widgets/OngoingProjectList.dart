@@ -13,11 +13,18 @@ class OngoingProjectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: projects.map((project) {
-        // Safely parse progress value or default to 0 if invalid
-        double progress = double.tryParse(project['progress']?.toString() ?? '0') ?? 0;
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        final project = projects[index];
+        // Dynamically calculate progress
+        int totalTasks = project['tasks'].length;
+        int completedTasks = project['tasks']
+            .where((task) => task['status'] == 'Completed')
+            .length;
+        double progress = totalTasks == 0 ? 0 : (completedTasks / totalTasks);
 
         // Convert members to full names
         List<String> members = (project['members'] as List<dynamic>)
@@ -54,7 +61,7 @@ class OngoingProjectList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            project['title'] ?? 'No title', 
+                            project['title'] ?? 'No title',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -78,7 +85,7 @@ class OngoingProjectList extends StatelessWidget {
                               );
                             }).toList(),
                           ),
-                          if (members.length > 2) ...[
+                          if (members.length > 2)
                             Text(
                               'And ${members.length - 2} more...',
                               style: const TextStyle(
@@ -86,7 +93,6 @@ class OngoingProjectList extends StatelessWidget {
                                 fontSize: 14,
                               ),
                             ),
-                          ],
                           const SizedBox(height: 10),
                           Text(
                             "Due on: ${project['date'] ?? ''}",
@@ -128,7 +134,44 @@ class OngoingProjectList extends StatelessWidget {
             ),
           ),
         );
-      }).toList(),
+      },
     );
   }
+}
+
+class ProgressCirclePainter extends CustomPainter {
+  final double progress;
+
+  ProgressCirclePainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint backgroundPaint = Paint()
+      ..color = Colors.grey[300]!
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8;
+
+    Paint progressPaint = Paint()
+      ..color = Colors.yellow
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
+
+    double center = size.width / 2;
+    double radius = center - 8;
+
+    canvas.drawCircle(Offset(center, center), radius, backgroundPaint);
+
+    double angle = 2 * 3.14159265359 * progress;
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(center, center), radius: radius),
+      -3.14159265359 / 2,
+      angle,
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
