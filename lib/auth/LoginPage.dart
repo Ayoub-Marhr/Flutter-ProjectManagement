@@ -25,8 +25,9 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      // Load users from JSON
+      // Load users and projects from JSON
       final users = await UserService.loadUsers();
+      final allProjects = await UserService.loadProjects();
 
       // Validate credentials
       final user = users.firstWhere(
@@ -35,10 +36,15 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (user != null) {
-        // Successful login
+        // Successful login, navigate to BaseScreen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => BaseScreen()),
+          MaterialPageRoute(
+            builder: (context) => BaseScreen(
+              loggedInUser: user,
+              allProjects: allProjects,
+            ),
+          ),
         );
       } else {
         setState(() {
@@ -141,17 +147,21 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(color: Colors.grey),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
-                    );
-                  },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(color: Color(0xFFFED36A)),
-                  ),
-                ),
+  onPressed: () {
+    // Navigate to SignUpPage
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPage(),
+      ),
+    );
+  },
+  child: const Text(
+    "Sign Up",
+    style: TextStyle(color: Color(0xFFFED36A)),
+  ),
+),
+
               ],
             ),
           ],
